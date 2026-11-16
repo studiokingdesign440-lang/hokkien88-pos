@@ -1,0 +1,15 @@
+{
+  "name": "Hokkien 88 POS",
+  "short_name": "Hokkien 88",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#F6F2EA",
+  "theme_color": "#A8201A",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -135,7 +135,6 @@ main{flex:1;min-height:0;position:relative}
 }
 .oc-del:hover{background:var(--accent-soft);color:var(--accent)}
 
-/* --- THE POS GRID FIXES --- */
 .pos{display:grid;grid-template-columns:minmax(0, 1fr) 386px;flex:1;min-height:0;width:100%;max-width:100vw;overflow:hidden}
 .pos-left{display:flex;flex-direction:column;min-height:0;position:relative;min-width:0;overflow:hidden}
 
@@ -185,7 +184,8 @@ main{flex:1;min-height:0;position:relative}
 /* ---------------- CART ---------------- */
 .cart{display:flex;flex-direction:column;background:#fff;min-height:0;border-left:1px solid var(--line)}
 .cart-head{padding:13px 15px;border-bottom:1px solid var(--line);flex-shrink:0}
-.cart-head-label{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:800;margin-bottom:6px}
+.cart-head-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.cart-head-label{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:800;}
 .order-name{
   width:100%;padding:11px 13px;border-radius:11px;border:1px solid var(--line);
   background:var(--bg);font-weight:700;font-size:14px;outline:none;transition:.15s;
@@ -198,6 +198,7 @@ main{flex:1;min-height:0;position:relative}
 .ci:hover{background:var(--bg)}
 .ci-info{flex:1;min-width:0}
 .ci-name{font-weight:700;font-size:13px;line-height:1.3;overflow:hidden;text-overflow:ellipsis}
+.ci-note{font-size:10px;color:var(--gold);font-style:italic;margin-top:2px;line-height:1.2;}
 .ci-price{font-size:11.5px;color:var(--muted);margin-top:2px;font-variant-numeric:tabular-nums}
 .ci-price b{color:var(--ink-2)}
 .qty{display:flex;align-items:center;gap:1px;background:var(--bg);border-radius:10px;padding:3px;flex-shrink:0}
@@ -206,6 +207,8 @@ main{flex:1;min-height:0;position:relative}
 .qty button:hover{background:#fff;box-shadow:var(--shadow-sm)}
 .qty button:active{transform:scale(.9)}
 .qty span{min-width:21px;text-align:center;font-weight:800;font-size:13px;font-variant-numeric:tabular-nums}
+.ci-note-btn{color:#C6B9A6;font-size:14px;padding:6px;border-radius:8px;transition:.12s;flex-shrink:0;margin-right:2px;}
+.ci-note-btn:hover{background:var(--surface-2);color:var(--ink);}
 .ci-del{color:#C6B9A6;font-size:15px;padding:7px;border-radius:8px;transition:.12s;flex-shrink:0}
 .ci-del:hover{background:var(--accent-soft);color:var(--accent)}
 
@@ -450,7 +453,10 @@ textarea.input{resize:vertical;line-height:1.55}
 
       <aside class="cart">
         <div class="cart-head">
-          <div class="cart-head-label">Table / Customer</div>
+          <div class="cart-head-row">
+            <div class="cart-head-label">Table / Customer</div>
+            <button class="btn ghost sm" id="customItemBtn" style="padding:4px 8px; font-size:10px;">+ Custom Item</button>
+          </div>
           <input id="orderName" class="order-name" placeholder="Select or create an order…" autocomplete="off" disabled>
         </div>
         <div class="cart-items" id="cartItems"></div>
@@ -969,15 +975,34 @@ function addToCart(productId) {
   const p = S.products.find(x => x.id === productId);
   if (!p) return;
 
-  const found = order.items.find(i => i.productId === productId);
+  const found = order.items.find(i => i.productId === productId && !i.note);
   if (found) found.qty += 1;
-  else order.items.push({ productId, name: p.name, price: p.price, qty: 1 });
+  else order.items.push({ productId, name: p.name, price: p.price, qty: 1, note: '' });
 
   order.updatedAt = Date.now();
   saveState();
   renderCart();
   renderOrdersStrip();
   if (navigator.vibrate) navigator.vibrate(8);
+}
+
+function addCustomItem(name, price, note) {
+  const order = currentOrder();
+  if (!order) {
+    toast('Create an order first', 'err');
+    return;
+  }
+  order.items.push({
+    productId: 'custom_' + uid(),
+    name: name,
+    price: Number(price) || 0,
+    qty: 1,
+    note: note || ''
+  });
+  order.updatedAt = Date.now();
+  saveState();
+  renderCart();
+  renderOrdersStrip();
 }
 
 function changeQty(idx, delta) {
@@ -1017,10 +1042,12 @@ function renderCart() {
     $('#rowSvc').hidden = true;
     payBtn.disabled = true;
     clearBtn.disabled = true;
+    $('#customItemBtn').disabled = true;
     return;
   }
 
   nameInput.disabled = false;
+  $('#customItemBtn').disabled = false;
   nameInput.placeholder = 'Table / customer name';
   if (lastCartOrderId !== order.id) {
     nameInput.value = order.name;
@@ -1035,6 +1062,7 @@ function renderCart() {
       <div class="ci">
         <div class="ci-info">
           <div class="ci-name">${esc(i.name)}</div>
+          ${i.note ? `<div class="ci-note">* ${esc(i.note)}</div>` : ''}
           <div class="ci-price">${rp(i.price)} × ${i.qty} = <b>${rp(i.price * i.qty)}</b></div>
         </div>
         <div class="qty">
@@ -1042,10 +1070,12 @@ function renderCart() {
           <span>${i.qty}</span>
           <button data-plus="${idx}">+</button>
         </div>
+        <button class="ci-note-btn" data-note="${idx}" title="Add/Edit Note">✎</button>
         <button class="ci-del" data-del="${idx}">✕</button>
       </div>`).join('');
     $$('[data-plus]', itemsBox).forEach(b => b.onclick = () => changeQty(+b.dataset.plus, 1));
     $$('[data-minus]', itemsBox).forEach(b => b.onclick = () => changeQty(+b.dataset.minus, -1));
+    $$('[data-note]', itemsBox).forEach(b => b.onclick = () => editItemNote(+b.dataset.note));
     $$('[data-del]', itemsBox).forEach(b => b.onclick = () => { changeQty(+b.dataset.del, -999); });
   }
 
@@ -1061,6 +1091,71 @@ function renderCart() {
   payBtn.disabled = !order.items.length;
   clearBtn.disabled = !order.items.length;
 }
+
+function editItemNote(idx) {
+  const order = currentOrder();
+  if (!order || !order.items[idx]) return;
+  const it = order.items[idx];
+  
+  openModal({
+    title: 'Item Note',
+    body: `
+      <div style="margin-bottom:12px;font-weight:700">${esc(it.name)}</div>
+      <label class="field"><span>Special Request / Note</span>
+        <input class="input" id="noteInput" value="${esc(it.note || '')}" placeholder="e.g. No onions, extra spicy, mix noodles" autocomplete="off">
+      </label>
+    `,
+    foot: `<button class="btn ghost" data-close>Cancel</button>
+           <button class="btn primary" id="saveNoteBtn">Save Note</button>`
+  });
+  
+  const inp = $('#noteInput');
+  setTimeout(() => inp.focus(), 60);
+  
+  $('#saveNoteBtn').onclick = () => {
+    it.note = inp.value.trim();
+    saveState();
+    renderCart();
+    closeModal();
+  };
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') $('#saveNoteBtn').click(); });
+}
+
+$('#customItemBtn').onclick = () => {
+  openModal({
+    title: 'Custom Item',
+    body: `
+      <label class="field"><span>Item Name</span>
+        <input class="input" id="customName" placeholder="e.g. Mix Noodles, Off-menu dish" autocomplete="off">
+      </label>
+      <label class="field"><span>Price (Rp)</span>
+        <input class="input" id="customPrice" type="number" inputmode="numeric" placeholder="0">
+      </label>
+      <label class="field" style="margin-bottom:0"><span>Note / Description</span>
+        <input class="input" id="customNote" placeholder="e.g. Mix Bakmi and Bihun" autocomplete="off">
+      </label>
+    `,
+    foot: `<button class="btn ghost" data-close>Cancel</button>
+           <button class="btn primary" id="addCustomBtn">Add to Cart</button>`
+  });
+  
+  const nameInp = $('#customName');
+  setTimeout(() => nameInp.focus(), 60);
+  
+  $('#addCustomBtn').onclick = () => {
+    const name = nameInp.value.trim();
+    const price = Number($('#customPrice').value) || 0;
+    const note = $('#customNote').value.trim();
+    
+    if (!name) return toast('Item name is required', 'err');
+    if (price <= 0) return toast('Price must be greater than 0', 'err');
+    
+    addCustomItem(name, price, note);
+    closeModal();
+    toast('Custom item added');
+  };
+  nameInp.addEventListener('keydown', e => { if (e.key === 'Enter') $('#customPrice').focus(); });
+};
 
 /* Rename current order */
 $('#orderName').addEventListener('input', e => {
@@ -1216,7 +1311,7 @@ function completeSale({ method, paid }) {
     orderNo: nextOrderNo(now),
     orderName: (order.name || '').trim() || 'Walk-in',
     cashier: pickCashier(),
-    items: order.items.map(i => ({ name: i.name, price: i.price, qty: i.qty })),
+    items: order.items.map(i => ({ name: i.name, price: i.price, qty: i.qty, note: i.note || '' })),
     subtotal: t.subtotal,
     tax: t.tax,
     service: t.svc,
@@ -1288,6 +1383,9 @@ function buildReceipt(sale, st) {
 
   sale.items.forEach(it => {
     wrapText(it.name, W).forEach(n => add(n));
+    if (it.note) {
+      wrapText('  * ' + it.note, W).forEach(n => add(n, { bold: true })); // Print notes in bold
+    }
     add(col2(`  ${it.qty} x ${fmt(it.price)}`, fmt(it.price * it.qty)));
   });
   hr();
@@ -1553,7 +1651,7 @@ function doTestPrint() {
   const fake = {
     id: 'test', ts: Date.now(), orderNo: '0001',
     orderName: 'Table 5', cashier: pickCashier(),
-    items: [{ name: 'Nasi Goreng Daging', price: 28000, qty: 1 }],
+    items: [{ name: 'Nasi Goreng Daging', price: 28000, qty: 1, note: 'Extra spicy' }],
     subtotal: 28000, tax: 0, service: 0, total: 28000,
     method: 'Cash', paid: 50000, change: 22000,
     thanks: pickThanks(), quote: pickQuote()
@@ -1805,7 +1903,7 @@ function showSaleDetail(id) {
         <thead><tr><th>Item</th><th>Qty</th><th style="text-align:right">Subtotal</th></tr></thead>
         <tbody>
           ${s.items.map(i => `<tr>
-            <td>${esc(i.name)}<div style="font-size:11px;color:var(--muted)">${rp(i.price)}</div></td>
+            <td>${esc(i.name)}${i.note ? `<div style="font-size:11px;color:var(--gold);font-style:italic;">* ${esc(i.note)}</div>` : ''}<div style="font-size:11px;color:var(--muted)">${rp(i.price)}</div></td>
             <td>${i.qty}</td>
             <td class="mono" style="text-align:right">${rp(i.price * i.qty)}</td></tr>`).join('')}
         </tbody>

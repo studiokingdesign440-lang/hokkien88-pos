@@ -150,7 +150,7 @@ main{flex:1;min-height:0;position:relative}
 
 .prod-grid{
   flex:1;overflow-y:auto;padding:8px 20px 28px;
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:11px;align-content:start;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%, 140px), 1fr));gap:11px;align-content:start;
 }
 .prod-card{
   display:flex;flex-direction:column;gap:3px;text-align:left;background:#fff;
@@ -1458,7 +1458,7 @@ function printViaBrowser(lines) {
   const w = Number(S.settings.paperWidth) === 80 ? '80mm' : '58mm';
   const body = lines.map(l => {
     if (l.divider) return '<div class="hr"></div>';
-    const cls = [l.align || '', l.bold ? 'b' : '', l.size === 2 ? 'big' : ''].join(' ');
+    const cls = [l.align || '', l.bold ? 'b' : '', l.size === 3 ? 'huge' : l.size === 2 ? 'big' : ''].join(' ');
     return `<div class="${cls}">${esc(l.t) || '&nbsp;'}</div>`;
   }).join('');
 
@@ -1467,7 +1467,8 @@ function printViaBrowser(lines) {
     body{width:${w};margin:0;padding:4px 6px;font-family:"Courier New",monospace;
          font-size:11px;line-height:1.35;color:#000}
     .center{text-align:center}.right{text-align:right}
-    .b{font-weight:700}.big{font-size:15px;font-weight:700;letter-spacing:.5px}
+    .b{font-weight:700}.big{font-size:15px;font-weight:700;letter-spacing:.5px} Then, just below that, look for the <style> block inside the HTML template. Find where it says .big{...} and add this right below it:
+.huge{font-size:18px;font-weight:800;letter-spacing:1px;margin:4px 0;}
     .hr{border-top:1px dashed #000;margin:3px 0}
     div{white-space:pre-wrap;word-break:break-word}
   </style></head><body>${body}</body></html>`;

@@ -54,10 +54,12 @@ main{flex:1;min-height:0;position:relative}
 .page-title{font-size:24px;font-weight:800;letter-spacing:-.025em}
 .page-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;flex-wrap:wrap}
 
-.orders-strip{display:flex;align-items:stretch;gap:12px;padding:13px 20px;flex-shrink:0;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#FFFFFF 0%,#FCFAF5 100%);min-height:96px}
-.new-order-btn{flex-shrink:0;display:flex;align-items:center;gap:9px;padding:0 20px;border-radius:15px;border:1.5px dashed #D6C8B2;background:#fff;color:var(--ink-2);font-weight:700;font-size:13px;transition:.15s}
+/* ORDERS STRIP */
+.orders-strip{display:flex;align-items:center;gap:12px;padding:13px 20px;flex-shrink:0;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#FFFFFF 0%,#FCFAF5 100%);min-height:96px}
+.new-order-btn{flex-shrink:0;display:flex;align-items:center;gap:9px;padding:14px 20px;border-radius:15px;border:1.5px dashed #D6C8B2;background:#fff;color:var(--ink-2);font-weight:700;font-size:13px;transition:.15s;white-space:nowrap;}
 .new-order-btn:active{transform:scale(.98)}
-.order-cards{display:flex;gap:10px;overflow-x:auto;flex:1;padding-bottom:2px}
+.new-order-btn svg{width:18px;height:18px;}
+.order-cards{display:flex;gap:10px;overflow-x:auto;flex:1;padding-bottom:2px;align-items:center;}
 .orders-empty{display:flex;align-items:center;color:var(--muted);font-size:13px;font-weight:600;padding-left:4px}
 .order-card{position:relative;min-width:190px;padding:11px 15px;border-radius:15px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-sm);text-align:left;display:flex;flex-direction:column;justify-content:center;gap:1px;transition:.15s;cursor:pointer}
 .order-card.active{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft),var(--shadow-sm)}
@@ -66,8 +68,12 @@ main{flex:1;min-height:0;position:relative}
 .oc-total{font-weight:800;color:var(--accent);font-size:13.5px;margin-top:3px}
 .oc-del{position:absolute;top:7px;right:7px;width:22px;height:22px;border-radius:7px;display:grid;place-items:center;color:#C9BCA8;font-size:14px;line-height:1}
 
+/* POS GRID */
 .pos{display:grid;grid-template-columns:minmax(0, 1fr) 386px;flex:1;min-height:0;width:100%;max-width:100vw;overflow:hidden}
 .pos-left{display:flex;flex-direction:column;min-height:0;position:relative;min-width:0;overflow:hidden}
+.pos-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;}
+.pos-empty h3{font-size:20px;font-weight:800;margin-bottom:8px;}
+.pos-empty p{color:var(--muted);margin-bottom:20px;}
 .cat-bar{display:flex;gap:8px;padding:14px 20px 6px;overflow-x:auto;flex-shrink:0;scrollbar-width:none;-webkit-overflow-scrolling:touch;width:100%}
 .cat-bar::-webkit-scrollbar{display:none}
 .chip{padding:9px 17px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:12.5px;font-weight:700;color:var(--ink-2);white-space:nowrap;transition:.15s}
@@ -82,6 +88,7 @@ main{flex:1;min-height:0;position:relative}
 .prod-price{font-weight:800;color:var(--accent);font-size:13px}
 .prod-add{width:22px;height:22px;border-radius:7px;background:var(--surface-2);color:var(--ink-2);display:grid;place-items:center;font-size:14px;font-weight:700;line-height:1;transition:.15s}
 
+/* CART */
 .cart{display:flex;flex-direction:column;background:#fff;min-height:0;border-left:1px solid var(--line)}
 .cart-head{padding:13px 15px;border-bottom:1px solid var(--line);flex-shrink:0}
 .cart-head-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
@@ -112,6 +119,7 @@ main{flex:1;min-height:0;position:relative}
 .pay-btn{margin-top:14px;padding:15px;font-size:15px;border-radius:13px}
 .cart-foot .btn.ghost{margin-top:8px;padding:10px;font-size:12.5px;border-radius:11px}
 
+/* BUTTONS / INPUTS */
 .btn{padding:11px 18px;border-radius:12px;font-weight:700;font-size:13.5px;border:1px solid transparent;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:filter .15s,transform .08s,background .15s}
 .btn:active{transform:scale(.98)}
 .btn:disabled{opacity:.42;cursor:not-allowed;box-shadow:none !important}
@@ -125,7 +133,6 @@ main{flex:1;min-height:0;position:relative}
 .input:focus{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px var(--accent-soft)}
 .field{display:block;margin-bottom:13px}
 .field>span{display:block;font-size:11.5px;font-weight:800;color:var(--ink-2);margin-bottom:6px;text-transform:uppercase}
-.search{max-width:240px}
 
 .card{background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:18px}
 .card h3{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--gold);margin-bottom:16px}
@@ -137,7 +144,6 @@ main{flex:1;min-height:0;position:relative}
 .tag{display:inline-block;padding:3px 9px;border-radius:7px;font-size:10.5px;font-weight:800;background:var(--surface-2);color:var(--ink-2)}
 .tag.on{background:#E7F4EC;color:var(--green)}
 .tag.off{background:#F2EFEA;color:var(--muted)}
-.tag.gold{background:#FBF2DF;color:var(--gold)}
 .tag.blue{background:#E7EEF7;color:#2B5F9E}
 .mono{font-variant-numeric:tabular-nums}
 
@@ -188,6 +194,9 @@ main{flex:1;min-height:0;position:relative}
 
 .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 @media (max-width:800px){ .summary-grid{grid-template-columns:1fr} }
+
+.quick-picks{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.quick-picks .chip{padding:8px 14px;font-size:12px;cursor:pointer}
 
 @media (max-width:1000px){
   .pos{grid-template-columns:1fr;grid-template-rows:1fr auto}
@@ -570,12 +579,34 @@ function createOrder(name) {
   const order = { id: uid(), name: name || ('Order ' + (S.orders.length + 1)), items: [], createdAt: Date.now() };
   S.orders.push(order); currentOrderId = order.id; saveState(); renderOrdersStrip(); renderCart();
 }
-$('#newOrderBtn').onclick = () => {
-  openModal({ title: 'New Order', body: `<label class="field"><span>Name / Table</span><input class="input" id="newOrderName" autocomplete="off"></label>`, foot: `<button class="btn ghost" data-close>Cancel</button><button class="btn primary" id="createOrderBtn">Create</button>` });
+
+function openNewOrderModal() {
+  const shortcuts = ['Takeaway', 'Meja 1', 'Meja 2', 'Meja 3', 'Meja 4', 'Meja 5', 'Meja 6', 'Meja 7', 'Meja Luar', 'Delivery'];
+  openModal({ 
+    title: 'New Order', 
+    body: `
+      <label class="field"><span>Table / Customer Name</span>
+        <input class="input" id="newOrderName" placeholder="e.g. Budi, Meja 8" autocomplete="off">
+      </label>
+      <div style="font-size:11px; font-weight:800; color:var(--ink-2); margin-bottom:6px; text-transform:uppercase;">Quick Select</div>
+      <div class="quick-picks">
+        ${shortcuts.map(n => `<button class="chip" data-name="${n}">${n}</button>`).join('')}
+      </div>
+    `, 
+    foot: `<button class="btn ghost" data-close>Cancel</button><button class="btn primary" id="createOrderBtn">Create</button>` 
+  });
+  
   setTimeout(()=>$('#newOrderName').focus(),50);
+  
+  $$('.quick-picks .chip').forEach(b => b.onclick = () => {
+    $('#newOrderName').value = b.dataset.name;
+    $('#newOrderName').focus();
+  });
+  
   $('#createOrderBtn').onclick = () => { createOrder($('#newOrderName').value.trim()); closeModal(); };
-};
-$('#posEmptyNew').onclick = () => $('#newOrderBtn').click();
+}
+$('#newOrderBtn').onclick = openNewOrderModal;
+$('#posEmptyNew').onclick = openNewOrderModal;
 
 function renderCatBar() {
   const bar = $('#catBar');
@@ -832,14 +863,13 @@ function renderSummary() {
   $('#sumExpectedCash').textContent = rp(expectedCash);
   $('#sumExpectedCash').style.color = expectedCash < 0 ? 'var(--accent)' : 'var(--green)';
   
-  // Update local cache for printing
   S.daily[today] = { kas: dayData.kas || 0, expectedCash };
 }
 
 $('#saveKasBtn').onclick = () => {
   const val = Number($('#kasInput').value) || 0;
   const today = localDate();
-  S.daily[today] = { kas: val, expectedCash: 0 }; // expectedCash will be updated in render
+  S.daily[today] = { kas: val, expectedCash: 0 };
   saveState(); renderSummary(); toast('Kas saved');
   if(S.settings.gasUrl) gasCall('saveDaily', { date: today, kas: val, actualCash: 0, expectedCash: 0 }).catch(()=>{});
 };
@@ -974,10 +1004,39 @@ function buildSummaryReceipt(st) {
   let cashExp = 0, creditExp = 0; exps.forEach(e => { if(e.type==='Cash') cashExp+=e.amount; else creditExp+=e.amount; });
   
   center('END OF DAY REPORT', { size: 2, bold: true }); center(fmtDateTime(new Date())); hr();
-  add(col2('Start Kas', fmt(dayData.kas))); add(col2('Cash Sales', fmt(cashSales))); add(col2('QRIS/Transfer Sales', fmt(qrisSales))); hr();
-  add(col2('Cash Expenses', '-'+fmt(cashExp))); add(col2('Credit Expenses', '-'+fmt(creditExp))); hr();
-  add(col2('Net Profit', 'Rp '+fmt((cashSales+qrisSales)-(cashExp+creditExp))), {bold:true}); hr();
-  add(col2('EXPECTED CASH', 'Rp '+fmt(dayData.kas + cashSales - cashExp)), {bold:true, size:2}); hr();
+  
+  add('SALES', {bold:true});
+  add(col2('Cash Sales', fmt(cashSales)));
+  add(col2('QRIS/Transfer', fmt(qrisSales)));
+  add(col2('Total Sales', fmt(cashSales+qrisSales)), {bold:true});
+  hr();
+  
+  if(exps.length) {
+    add('EXPENSES', {bold:true});
+    const cashExps = exps.filter(e => e.type === 'Cash');
+    const credExps = exps.filter(e => e.type === 'Credit');
+    
+    if(cashExps.length) {
+      add('-- PAID CASH --', {align:'center'});
+      cashExps.forEach(e => add(col2(' ' + e.name, fmt(e.amount))));
+      add(col2('Total Cash Exp', fmt(cashExp)), {bold:true});
+    }
+    
+    if(credExps.length) {
+      add('-- CREDIT / PAY LATER --', {align:'center'});
+      credExps.forEach(e => add(col2(' ' + e.name, fmt(e.amount))));
+      add(col2('Total Credit Exp', fmt(creditExp)), {bold:true});
+    }
+    hr();
+  }
+  
+  add(col2('Start Kas', fmt(dayData.kas)));
+  add(col2('Net Profit', 'Rp '+fmt((cashSales+qrisSales)-cashExp-creditExp)), {bold:true});
+  hr();
+  
+  add(col2('EXPECTED CASH', 'Rp '+fmt(dayData.kas + cashSales - cashExp)), {bold:true, size:2});
+  center('(Kas + Cash Sales - Cash Exp)'); hr();
+  
   center('M9M VERIFICATION', {bold:true}); add(''); center('Signature: _______________'); add(''); center('Thank you for your hard work!');
   return L;
 }
@@ -997,11 +1056,34 @@ function showReceiptPreview(lines) {
   $('#bp').onclick = () => printViaBrowser(lines);
 }
 
-$('#printSummaryBtn').onclick = async () => {
+$('#printSummaryBtn').onclick = () => {
   const lines = buildSummaryReceipt(S.settings);
-  if (S.settings.printMethod === 'browser') return printViaBrowser(lines);
-  try { if(!printer.connected) await connectPrinter(); await sendToPrinter(buildEscPos(lines, S.settings)); toast('Summary printed'); } catch(e) { showReceiptPreview(lines); }
+  const W = Number(S.settings.paperWidth) === 80 ? 48 : 32;
+  const previewText = lines.map(l=>l.divider?'-'.repeat(W):l.t).join('\n');
+  
+  openModal({
+    title: 'Preview: End of Day Report',
+    body: `
+      <div style="font-size:12px; color:var(--muted); margin-bottom:10px; font-style:italic;">
+        Tip: If you spot a mistake, close this window, edit your Expenses or Kas, and click Print again.
+      </div>
+      <pre class="receipt-pre" style="max-height:50vh; overflow-y:auto;">${esc(previewText)}</pre>
+    `,
+    foot: `
+      <button class="btn ghost" data-close>Cancel</button>
+      <button class="btn ghost" id="btnBrowserPrint">Browser Print</button>
+      <button class="btn primary" id="btnThermalPrint">Thermal Print</button>
+    `
+  });
+  
+  $('#btnBrowserPrint').onclick = () => { closeModal(); printViaBrowser(lines); };
+  $('#btnThermalPrint').onclick = async () => {
+    closeModal();
+    try { if(!printer.connected) await connectPrinter(); await sendToPrinter(buildEscPos(lines, S.settings)); toast('Summary printed'); } 
+    catch(e) { toast('Printer failed', 'err'); showReceiptPreview(lines); }
+  };
 };
+
 $('#btnTestPrint').onclick = () => {
   const fake = { ts: Date.now(), orderNo: '0001', orderName: 'Test', cashier: 'Test', items: [{name:'Item',price:10000,qty:1,note:''}], subtotal:10000, total:10000, payments:[{method:'Cash',amount:10000}], change:0, thanks:'Thanks', quote:'' };
   printReceipt(fake);
